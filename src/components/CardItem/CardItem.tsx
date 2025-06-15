@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { memo, type FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ICardItemProps } from './types';
 import TurboImage from 'react-native-turbo-image';
@@ -43,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CardItem;
+export default memo(CardItem);

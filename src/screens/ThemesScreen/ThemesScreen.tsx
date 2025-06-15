@@ -1,20 +1,17 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { getThemes } from '../../api/services';
 import { TThemeType } from '../../types/types';
 import CardItem from '../../components/CardItem/CardItem';
 import { ThemesScreenNavigationProp } from '../../navigation/types';
+import IconTextButton from '../../components/IconTextButton/IconTextButton';
+import ArrowInCircleIcon from '../../assets/svgs/ArrowInCircleIcon';
 
 const ThemesScreen: FC = () => {
   const navigation = useNavigation<ThemesScreenNavigationProp>();
+  const [allThemes, setAllThemes] = useState<TThemeType[]>([]);
   const [themes, setThemes] = useState<TThemeType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedTag, setSelectedTag] = useState<string>('Все темы');
@@ -23,6 +20,7 @@ const ThemesScreen: FC = () => {
     const fetchThemes = async () => {
       try {
         const data = await getThemes();
+        setAllThemes(data);
         setThemes(data);
       } catch (error) {
         console.error(error);
@@ -35,11 +33,15 @@ const ThemesScreen: FC = () => {
   }, []);
 
   useEffect(() => {
-    const filteredThemes = themes.filter((item: TThemeType) => {
-      item.tags.includes(selectedTag);
-    });
+    if (selectedTag === 'Все темы') {
+      setThemes(allThemes);
+      return;
+    }
+    const filteredThemes = allThemes.filter((item: TThemeType) =>
+      item.tags.includes(selectedTag),
+    );
     setThemes(filteredThemes);
-  }, [selectedTag]);
+  }, [selectedTag, allThemes]);
 
   const navigateToChooseTheme = () => {
     navigation.navigate('ChooseTheme', {
@@ -49,14 +51,18 @@ const ThemesScreen: FC = () => {
   };
 
   const renderItem = ({ item }: { item: TThemeType }) => (
-    <TouchableOpacity onPress={() => navigateToChooseTheme()}>
-      <CardItem name={item.name} bgColor={item.bgColor} image={item.image} />
-    </TouchableOpacity>
+    <CardItem name={item.name} bgColor={item.bgColor} image={item.image} />
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
+        <IconTextButton
+          hitSlop={32}
+          title={selectedTag}
+          onPress={navigateToChooseTheme}
+          iconRight={<ArrowInCircleIcon />}
+        />
         {loading ? (
           <ActivityIndicator />
         ) : (
