@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IHeaderProps } from './types';
+import Text from '../Text/Text';
 
 const Header: React.FC<IHeaderProps> = ({
   title,
@@ -63,6 +58,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontSize: 18,
+    letterSpacing: -0.1,
     color: 'black',
   },
 });

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../consts/routes';
-import { TThemeType } from '../types/types';
+import { TThemeType } from '../globalTypes/types';
 
 export const getThemes = async (): Promise<TThemeType[]> => {
   try {

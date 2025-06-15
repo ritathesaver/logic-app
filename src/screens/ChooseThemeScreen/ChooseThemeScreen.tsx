@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -14,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { getTags } from '../../api/services';
 import { TChooseThemeProps } from '../../navigation/types';
+import Text from '../../components/Text/Text';
 
 const ChooseThemeScreen: FC<TChooseThemeProps> = ({ route }) => {
   const navigation = useNavigation();
@@ -43,15 +43,24 @@ const ChooseThemeScreen: FC<TChooseThemeProps> = ({ route }) => {
     navigation.goBack();
   };
 
-  const renderItem = ({ item }: { item: string }) => (
-    <TouchableOpacity
-      onPress={() => navigateBack(item)}
-      style={item === selectedTag ? styles.selectedItem : styles.item}
-    >
-      <Text style={[styles.title, item === selectedTag && { color: 'white' }]}>
-        {item}
-      </Text>
-    </TouchableOpacity>
+  const renderItem = useCallback(
+    ({ item }: { item: string }) => {
+      const isSelected = item === selectedTag;
+
+      const handlePress = () => navigateBack(item);
+
+      return (
+        <TouchableOpacity
+          onPress={handlePress}
+          style={isSelected ? styles.selectedItem : styles.item}
+        >
+          <Text style={[styles.title, isSelected && { color: 'white' }]}>
+            {item}
+          </Text>
+        </TouchableOpacity>
+      );
+    },
+    [selectedTag],
   );
 
   return (
@@ -104,5 +113,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    letterSpacing: -0.1,
   },
 });

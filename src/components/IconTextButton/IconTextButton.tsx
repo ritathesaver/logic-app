@@ -1,5 +1,5 @@
 import React, { type FunctionComponent, memo, useCallback } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   interpolateColor,
@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { type IIconTextButtonProps } from './types';
+import Text from '../Text/Text';
 
 const IconTextButton: FunctionComponent<IIconTextButtonProps> = ({
   disabled,

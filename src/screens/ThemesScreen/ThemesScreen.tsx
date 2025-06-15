@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { getThemes } from '../../api/services';
-import { TThemeType } from '../../types/types';
+import { TThemeType } from '../../globalTypes/types';
 import CardItem from '../../components/CardItem/CardItem';
 import { ThemesScreenNavigationProp } from '../../navigation/types';
 import IconTextButton from '../../components/IconTextButton/IconTextButton';
@@ -50,8 +50,11 @@ const ThemesScreen: FC = () => {
     });
   };
 
-  const renderItem = ({ item }: { item: TThemeType }) => (
-    <CardItem name={item.name} bgColor={item.bgColor} image={item.image} />
+  const renderItem = useCallback(
+    ({ item }: { item: TThemeType }) => (
+      <CardItem name={item.name} bgColor={item.bgColor} image={item.image} />
+    ),
+    [],
   );
 
   return (
@@ -69,11 +72,12 @@ const ThemesScreen: FC = () => {
           <FlatList
             data={themes}
             renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => String(item.id)}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.list}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
+            initialNumToRender={5}
           />
         )}
       </View>
@@ -87,6 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#7446EE',
+    paddingTop: 12,
   },
   separator: {
     width: 18,
